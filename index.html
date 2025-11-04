@@ -1,0 +1,163 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Bastionado del arranque seguro en Linux (Debian)</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="UA-XXXXX"
+                  id="bastionado-arranque-seguro-linux-debian"
+                  title="Bastionado del arranque seguro en Linux (Debian)"
+                  environment="web"
+                  feedback-link="https://github.com/IES-Rafael-Alberti/hardening-ARRANQUE-2526">
+    
+      <google-codelab-step label="Introducción" duration="2">
+        <p>En esta guía aprenderás a proteger el arranque de un sistema Debian usando GRUB 2, configurando contraseñas cifradas, ocultando el menú y realizando otras configuraciones de seguridad.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Fundamentos del gestor de arranque GRUB 2" duration="2">
+        <p>GRUB 2 es el gestor de arranque más utilizado en sistemas Linux. Utiliza archivos de configuración y scripts:</p>
+<ul>
+<li><code>/boot/grub/grub.cfg</code>: Archivo principal generado automáticamente</li>
+<li><code>/etc/default/grub</code>: Configuración general</li>
+<li><code>/etc/grub.d/</code>: Scripts de configuración</li>
+<li><code>/boot/grub/custom.cfg</code>: Archivo opcional para personalización</li>
+</ul>
+<p><strong>Importante:</strong> Nunca edites directamente <code>grub.cfg</code>, siempre modifica los archivos fuente y regenera la configuración.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Paso 1: Editar archivo de configuración personalizado" duration="2">
+        <p>Primero accedemos al archivo donde configuraremos la protección: sudo nano /etc/grub.d/40_custom</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Paso 2: Añadir superusuario y contraseña" duration="3">
+        <p>Dentro del archivo <code>/etc/grub.d/40_custom</code>, añade al final estas líneas: set superusers=&#34;root&#34; password root TuContraseña</p>
+<p class="image-container"><img alt="Añadir configuración de contraseña" src="img\\83a860b73f450372.png"></p>
+<p><strong>Para mayor seguridad, usa contraseña cifrada:</strong></p>
+<ol type="1">
+<li>Genera el hash con: sudo grub-mkpasswd-pbkdf2</li>
+<li>Introduce tu contraseña dos veces</li>
+<li>Copia el hash generado</li>
+</ol>
+<p><em>Referencia visual:</em><img alt="Añadir configuración de contraseña" src="img\\838ddedd9653c51a.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Paso 3: Configurar contraseña cifrada" duration="2">
+        <p>Reemplaza la línea de contraseña en texto plano por: set superusers=&#34;root&#34; password_pbkdf2 root grub.pbkdf2.sha512.10000.[TU_HASH_COMPLETO]</p>
+<p>Donde <code>[TU_HASH_COMPLETO]</code> es el hash que generaste en el paso anterior.</p>
+<p><em>Referencia visual:</em><img alt="Configuración con hash" src="img\\a9ef9f0922f09d71.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Paso 4: Proteger permisos del archivo" duration="1">
+        <p>Cambia los permisos para que solo root pueda modificar el archivo:</p>
+<p>sudo chmod 700 /etc/grub.d/40_custom</p>
+<p><em>Referencia visual:</em><img alt="Cambiar permisos" src="img\\a0bf1059bc0c2d97.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Paso 5: Ocultar menú de arranque (opcional)" duration="2">
+        <p>Para ocultar el menú GRUB y acelerar el arranque:</p>
+<ol type="1">
+<li>Edita el archivo de configuración: sudo nano /etc/default/grub</li>
+<li>Busca la línea <code>GRUB_TIMEOUT=5</code> y cámbiala a: GRUB_TIMEOUT=0</li>
+<li>Guarda y cierra</li>
+</ol>
+<p><em>Referencia visual:</em><img alt="Configurar timeout" src="img\\983107f23fdc59b5.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Paso 6: Aplicar cambios" duration="1">
+        <p>Actualiza la configuración de GRUB para aplicar todos los cambios:</p>
+<p>sudo update-grub</p>
+<p>Este comando regenera el archivo <code>/boot/grub/grub.cfg</code> con las nuevas configuraciones.</p>
+<p><em>Referencia visual:</em><img alt="Actualizar GRUB" src="img\\f5ecba8a77c8b9ed.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Comprobaciones y pruebas" duration="2">
+        <h2 is-upgraded>Verificar timeout configurado</h2>
+<p>grep GRUB_TIMEOUT /etc/default/grub</p>
+<p>Debe mostrar <code>GRUB_TIMEOUT=0</code> si configuraste ocultación del menú.</p>
+<p class="image-container"><img alt="Mostrar GRUB_TIMEOUT=0" src="img\\4162ad0e0250568e.png"></p>
+<h2 is-upgraded>Verificar Secure Boot (si aplica)</h2>
+<p>mokutil –sb-state</p>
+<p><strong>Nota:</strong> En máquinas virtuales sin UEFI, verás &#34;EFI variables are not supported&#34;.</p>
+<h2 is-upgraded>Verificar cifrado de disco</h2>
+<p>lsblk -o NAME,FSTYPE,MOUNTPOINT | grep crypt</p>
+<h2 is-upgraded>Prueba de arranque</h2>
+<p>Reinicia el sistema y verifica:</p>
+<ul>
+<li>El menú GRUB pide contraseña para modificar opciones</li>
+<li>Sin contraseña correcta, no se puede acceder al menú</li>
+<li>Si configuraste timeout=0, el menú está oculto y arranca directamente</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Recomendaciones adicionales" duration="1">
+        <ul>
+<li><strong>Secure Boot:</strong> Verifica que esté activo en hardware compatible</li>
+<li><strong>Actualización de firmware:</strong> Mantén el sistema actualizado</li>
+<li><strong>Cifrado de disco:</strong> Considera usar LUKS para protección adicional</li>
+<li><strong>Backup de configuración:</strong> Guarda copias de tus archivos de configuración</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Referencias" duration="0">
+        <ul>
+<li><a href="https://www.gnu.org/software/grub/manual/" target="_blank">Documentación oficial GRUB</a></li>
+<li><a href="https://wiki.debian.org/SecureBoot" target="_blank">Guía Debian Secure Boot</a></li>
+<li><a href="https://help.ubuntu.com/community/Grub2/Passwords" target="_blank">GRUB Password Protection</a></li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Conclusión" duration="0">
+        <p>Has configurado exitosamente el bastionado del arranque en Debian protegiendo GRUB con contraseña cifrada, ocultando el menú y aplicando buenas prácticas de seguridad.</p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>
