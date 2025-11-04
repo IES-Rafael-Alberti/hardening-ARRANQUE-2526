@@ -82,7 +82,7 @@
 
       </google-codelab-step>
     
-      <google-codelab-step label="Paso 5: Ocultar menú de arranque (opcional)" duration="2">
+      <google-codelab-step label="Paso 5: Ocultar menú de arranque" duration="2">
         <p>Para ocultar el menú GRUB y acelerar el arranque:</p>
 <ol type="1">
 <li>Edita el archivo de configuración: sudo nano /etc/default/grub</li>
@@ -108,7 +108,7 @@
 <p>grep GRUB_TIMEOUT /etc/default/grub</p>
 <p>Debe mostrar <code>GRUB_TIMEOUT=0</code> si configuraste ocultación del menú.</p>
 <p class="image-container"><img alt="Mostrar GRUB_TIMEOUT=0" src="img\\4162ad0e0250568e.png"></p>
-<h2 is-upgraded>Verificar Secure Boot (si aplica)</h2>
+<h2 is-upgraded>Verificar Secure Boot</h2>
 <p>mokutil –sb-state</p>
 <p><strong>Nota:</strong> En máquinas virtuales sin UEFI, verás &#34;EFI variables are not supported&#34;.</p>
 <h2 is-upgraded>Verificar cifrado de disco</h2>
@@ -124,12 +124,21 @@
 
       </google-codelab-step>
     
+      <google-codelab-step label="Paso 0 (antes de modificar): Copia de seguridad (muy importante)" duration="0">
+        <p>Antes de editar cualquier archivo importante, haz una copia de seguridad para poder restaurar la configuración original si algo falla:</p>
+<p>sudo cp /etc/default/grub /etc/default/grub.bak sudo cp /etc/grub.d/40_custom /etc/grub.d/40_custom.bak</p>
+<p>También puedes hacer un respaldo completo así:</p>
+<p>sudo tar czvf grub_backup_$(date +%F).tar /etc/default/grub /etc/grub.d/ /boot/grub/grub.cfg</p>
+
+
+      </google-codelab-step>
+    
       <google-codelab-step label="Recomendaciones adicionales" duration="1">
         <ul>
-<li><strong>Secure Boot:</strong> Verifica que esté activo en hardware compatible</li>
-<li><strong>Actualización de firmware:</strong> Mantén el sistema actualizado</li>
-<li><strong>Cifrado de disco:</strong> Considera usar LUKS para protección adicional</li>
-<li><strong>Backup de configuración:</strong> Guarda copias de tus archivos de configuración</li>
+<li><strong>Secure Boot:</strong> Es una característica de la [translate:UEFI] que evita que se cargue software no autorizado durante el arranque, protegiendo contra malware y rootkits. Se activa en la configuración del BIOS/UEFI.</li>
+<li><strong>Actualización de firmware:</strong> Mantén el sistema actualizado para corregir vulnerabilidades.</li>
+<li><strong>Cifrado de disco:</strong>  Protege todos los datos del disco solicitando una contraseña al arrancar el sistema. Es una opción que se puede seleccionar durante la instalación o configurar posteriormente.</li>
+<li><strong>Backup de configuración:</strong>  Siempre guarda copias de tus archivos de configuración antes de modificar.</li>
 </ul>
 
 
