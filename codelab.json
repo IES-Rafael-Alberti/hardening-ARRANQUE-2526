@@ -1,0 +1,27 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2025-11-04T14:12:39+01:00",
+  "id": "bastionado-arranque-seguro-linux-debian",
+  "duration": 18,
+  "title": "Bastionado del arranque seguro en Linux (Debian)",
+  "authors": "Nerea",
+  "summary": "Bastionado del arranque seguro en Linux (Debian)",
+  "source": "codelab.md",
+  "theme": "",
+  "status": [
+    "published"
+  ],
+  "category": [
+    "seguridad",
+    "hardening"
+  ],
+  "tags": [
+    "linuxdebian"
+  ],
+  "feedback": "https://github.com/IES-Rafael-Alberti/hardening-ARRANQUE-2526",
+  "ga": "UA-XXXXX",
+  "url": "bastionado-arranque-seguro-linux-debian"
+}

@@ -173,7 +173,7 @@ sudo tar czvf grub_backup_$(date +%F).tar /etc/default/grub /etc/grub.d/ /boot/g
 ## Recomendaciones adicionales
 Duration: 0:01:00
 
-- **Secure Boot:** Es una característica de la  que evita que se cargue software no autorizado durante el arranque, protegiendo contra malware y rootkits. Se activa en la configuración del BIOS/UEFI.
+- **Secure Boot:** Es una característica  que evita que se cargue software no autorizado durante el arranque, protegiendo contra malware y rootkits. Se activa en la configuración del BIOS/UEFI.
 
 - **Actualización de firmware:** Mantén el sistema actualizado para corregir vulnerabilidades.
 
